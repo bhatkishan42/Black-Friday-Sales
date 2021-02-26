@@ -73,7 +73,7 @@ Linear Regression
 
 - Importing  data and reading
 
-# ```python
+```python
 data_train_path='/kaggle/input/black-friday/train.csv'
 data_test_path='/kaggle/input/black-friday/test.csv'
 df_a = pd.read_csv(data_train_path)
@@ -119,14 +119,16 @@ df1.nunique()
 ```python
 df1.isna().sum()
 ```
-```pythonlist(df1.select_dtypes(include = np.number))
+```python
+list(df1.select_dtypes(include = np.number))
+```
 
-# %% [markdown]
-# - Dropping Product_Category_3 as huge no off data is missing
-# - And we are imputing Product_Category_2 
-# - Method == ***Median()***
+- Dropping Product_Category_3 as huge no off data is missing
+- And we are imputing Product_Category_2 
+- Method == ***Median()***
 
-```pythondf1['Product_Category_2'].fillna(df1.Product_Category_2.median(), inplace=True)
+```python
+df1['Product_Category_2'].fillna(df1.Product_Category_2.median(), inplace=True)
 df1.isna().sum()
 # drop Product_Category_3 
 df1.drop('Product_Category_3',axis=1,inplace = True)
@@ -160,107 +162,101 @@ lets get on with explorattion and look out for any key patterns
 ```python
 # sns.pairplot(df1.drop(columns = ['User_ID','Product_ID']).select_dtypes(include = np.number))
 ```
-# %% [markdown]
-# - Its checks out more no of male are present during the black friday sale copared to females
 
-# %% [code]
+ - Its checks out more no of male are present during the black friday sale copared to females
+
+```python
 plt.xlabel('Plot Number')
 plt.title('Gender count')
 sns.countplot(x = df1.GEN_1,data = df1)
+```
 
-# %% [markdown]
-# So from the below plot & list we can say that on an average ppl staying for around 4+ yrs are the one to buy most from sale,followed by 3yrs,2yrs,1 yrs respectively
+ So from the below plot & list we can say that on an average ppl staying for around 4+ yrs are the one to buy most from sale,followed by 3yrs,2yrs,1 yrs respectively
 
-# %% [code]
+```python
 df1.groupby('Stay_In_Current_City_Years').Stay_In_Current_City_Years.sum().sort_values(ascending =False)
-
-# %% [code]
+```
+```python
 df1.groupby('Stay_In_Current_City_Years').Stay_In_Current_City_Years.sum().sort_values(ascending = False).plot(kind = 'bar').set_xlabel("NO. of years")
+```
+### Inference
 
-# %% [markdown]
-# #### Inference
-# - Looking at below plots we can see that age grp of **26-35** are the highest in the grp following **36-45**,**18-25**,**51-55** respectively
-# - In city category we can see that category **B** is more followed by **A** and **C** respectively
-# - Regarding maritial status Unmarried ppls do buy more compared to Other 
+- Looking at below plots we can see that age grp of **26-35** are the highest in the grp following **36-45**,**18-25**,**51-55** respectively
+- In city category we can see that category **B** is more followed by **A** and **C** respectively
+- Regarding maritial status Unmarried ppls do buy more compared to Other 
 
-# %% [code]
+
+```python
 sns.countplot(df1.Age)
-
-# %% [code]
+```
+```python
 sns.countplot(df1.City_Category)
-
-# %% [code]
+```
+```python
 sns.countplot(df1.Marital_Status)
+```
+- P00265242,P00112142,P00025442,P00110742,P00046742  
+  - these are top 5 selling products during black friday sale
+ 
 
-# %% [markdown]
-# 
-# P00265242,P00112142,P00025442,P00110742,P00046742  
-# - these are top 5 selling products during black friday sale
-# 
-
-# %% [code]
+```python
 df1.Product_ID.value_counts().head(50)
-
-# %% [code]
+```
+```python
 sns.set(rc={'figure.figsize':(11.7,8.27)})
 plt.xticks(rotation = 90)
 df1.Product_ID.value_counts().head(50).plot(kind = 'bar')
+```
+ - Product_Category_2 has the product 9.0 selling highest followed by product 8
 
-# %% [markdown]
-# - Product_Category_2 has the product 9.0 selling highest followed by product 8
-
-# %% [code]
+```python
 sns.set(rc={'figure.figsize':(11.7,8.27)})
 plt.xticks(rotation = 90)
 df1.Product_Category_2.value_counts(ascending = False).plot(kind = 'bar')
-
-# %% [code]
+```
+```python
 df1.groupby('Product_Category_1')['Product_ID'].nunique().plot(kind = 'bar')
-
-# %% [code]
+```
+```python
 sns.heatmap(df1.drop(columns=['User_ID','Product_ID']).select_dtypes(include = np.number).corr(method = "kendall"),cmap='Greys',annot = True)
-
-# %% [code]
+```
+```python
 sns.clustermap(df1.drop(columns=['User_ID','Product_ID']).select_dtypes(include = np.number).corr(method = "kendall"),cmap='Greys' )
-
-# %% [code]
+```
+```python
  data_1 = df1.iloc[:,-4:-1]
 print(pd.DataFrame(data_1))
-
-# %% [code]
+```
+```python
 df11.isna().sum()
+```
+ ## Statistical analysis
 
-# %% [markdown]
-# ## Statistical analysis
 
-# %% [markdown]
-# ##### OneHotEncoder
+  **OneHotEncoder
 
-# %% [markdown]
-# - We can also us pd_get_dummies to get encoding but we will follow traditional approach
 
-# %% [code]
+ - We can also us pd_get_dummies to get encoding but we will follow traditional approach
+
+```python
 print(df11.shape)
-
 print(df1.shape)
-
-# %% [code]
+```
+```python
 df11['Product_Category_2'].fillna(df11.Product_Category_2.median(), inplace=True)
 df11.isna().sum()
 # drop Product_Category_3 
 df11.drop('Product_Category_3',axis=1,inplace = True)
+```
 
-# %% [markdown]
-# ###### We Are using test data set for analysis 
+ ###### We Are using test data set for analysis 
 
-# %% [code]
+```python
 # drop User_ID and Product_ID
 df1.drop(columns = ['User_ID','Product_ID'],inplace = True)
-
-# %% [code]
 df1.Purchase 
-
-# %% [code]
+```
+```python
 # one-hot encoding of categorical features
 from sklearn.preprocessing import OneHotEncoder
 # get categorical features and review number of unique values
@@ -274,14 +270,13 @@ cat_encoded.columns = enc.get_feature_names(cat.columns)
 num = df1.drop(columns =cat.columns)
 df2 = pd.concat([cat_encoded, num], axis=1)
 df2.head()
-
-# %% [code]
+```
+```python
 df2.columns
+```
+findings : Rmse is  smaller than median value indicating good model
 
-# %% [markdown]
-# findings : Rmse is  smaller than median value indicating good model
-
-# %% [code]
+```python
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
@@ -302,20 +297,15 @@ preds = model.predict(X_test)
 # evaluate model using RMSE
 print("Linear regression model RMSE: ", np.sqrt(mean_squared_error(y_test, preds)))
 print("Median value of target variable: ", y.median())
-
-# %% [code]
+```
 - age,gender,city category,product category , occupation , stay , martital are listed according to the weights
-
-# %% [markdown]
-# - 
-
-# %% [code]
+```python
 import eli5 
 from eli5.sklearn import  PermutationImportance
 perm =PermutationImportance(model,random_state=1).fit(X_train,y_train)
 eli5.show_weights(perm,feature_names = X_test.columns.tolist(),top = 20)
-
-# %% [code]
+```
+```python
 import shap
 # calculate shap values 
 ex = shap.Explainer(model, X_train)
@@ -323,3 +313,4 @@ shap_values = ex(X_test)
 # plot
 plt.title('SHAP summary for NumStorePurchases', size=16)
 shap.plots.beeswarm(shap_values, max_display=5)
+```
