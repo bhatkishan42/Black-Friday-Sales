@@ -1,3 +1,6 @@
+
+# Data analysis report,codes are available in python notebook named as (black-friday-project.ipynb) in this repository
+
 # Black-Friday-Sales-Prediction
 
 
